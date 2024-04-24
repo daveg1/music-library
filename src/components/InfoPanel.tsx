@@ -1,27 +1,21 @@
-import { Dispatch, SetStateAction, useContext } from "react";
-import { Release } from "../models/release.model";
+import { useContext } from "react";
 import { getAlbumCoverArtURL } from "../utils/musicbrainz";
 import { FlagIcon } from "./FlagIcon";
 import { getSpotifyAlbum } from "../utils/spotify_auth";
 import { GlobalContext } from "../state";
 
-interface Props {
-  selected: Release | null;
-  setSelected: Dispatch<SetStateAction<Release | null>>;
-}
-
-function InfoPanel(props: Props) {
-  const { selected, setSelected } = props;
-  const { token, releases, setReleases } = useContext(GlobalContext);
+function InfoPanel() {
+  const { selectedRelease, setSelectedRelease, token, releases, setReleases } =
+    useContext(GlobalContext);
 
   async function linkSpotify() {
-    if (!selected || !token) return;
-    const results = await getSpotifyAlbum(token, selected.title);
+    if (!selectedRelease || !token) return;
+    const results = await getSpotifyAlbum(token, selectedRelease.title);
     console.log(results);
 
     const spotifyUrl = results.albums.items[0].external_urls.spotify;
     const updatedReleases = releases.map((r) => {
-      if (r.id == selected.id) {
+      if (r.id == selectedRelease.id) {
         r.spotifyUrl = spotifyUrl;
       }
 
@@ -32,7 +26,7 @@ function InfoPanel(props: Props) {
   }
 
   function openSpotify() {
-    window.open(selected?.spotifyUrl, "_blank");
+    window.open(selectedRelease?.spotifyUrl, "_blank");
   }
 
   function openTrackList() {
@@ -40,17 +34,17 @@ function InfoPanel(props: Props) {
   }
 
   return (
-    selected && (
+    selectedRelease && (
       <aside className="fixed right-4 top-4 mr-4 flex h-4/5 w-96 flex-col gap-2 rounded-lg bg-stone-100 object-contain p-4">
         <header className="flex justify-between">
           <div>
-            <h3 className="font-semibold leading-4">{selected.title}</h3>
-            <p className="text-sm">{selected.artist}</p>
+            <h3 className="font-semibold leading-4">{selectedRelease.title}</h3>
+            <p className="text-sm">{selectedRelease.artist}</p>
           </div>
 
           <button
             className="flex h-7 w-7 items-center justify-center self-start rounded-lg hover:bg-amber-200"
-            onClick={() => setSelected(null)}
+            onClick={() => setSelectedRelease(null)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -69,13 +63,13 @@ function InfoPanel(props: Props) {
 
         <div className="aspect-square w-full">
           <img
-            src={getAlbumCoverArtURL(selected.id)}
+            src={getAlbumCoverArtURL(selectedRelease.id)}
             className="aspect-square w-full appearance-none rounded-lg bg-stone-200"
           />
         </div>
 
         <menu className="flex gap-2 py-1">
-          {!selected.spotifyUrl && (
+          {!selectedRelease.spotifyUrl && (
             <button
               className="flex h-8 items-center gap-1 rounded border border-stone-300 px-2 transition-colors hover:border-black hover:bg-black hover:text-white"
               onClick={linkSpotify}
@@ -102,7 +96,7 @@ function InfoPanel(props: Props) {
             </button>
           )}
 
-          {selected.spotifyUrl && (
+          {selectedRelease.spotifyUrl && (
             <>
               <button
                 className="flex h-8 items-center gap-1 rounded border border-stone-300 px-2 transition-colors hover:border-black hover:bg-black hover:text-white"
@@ -143,22 +137,23 @@ function InfoPanel(props: Props) {
 
         <dl className="grid grid-cols-2 justify-between text-sm leading-6">
           <dt>ASIN</dt>
-          <dd>{selected.asin || "-"}</dd>
+          <dd>{selectedRelease.asin || "-"}</dd>
           <dt>Barcode</dt>
-          <dd>{selected.barcode || "-"}</dd>
+          <dd>{selectedRelease.barcode || "-"}</dd>
           <dt>Country</dt>
           <dd>
-            <FlagIcon country={selected.country} /> {selected.country}
+            <FlagIcon country={selectedRelease.country} />{" "}
+            {selectedRelease.country}
           </dd>
           <dt>Date</dt>
-          <dd>{selected.date}</dd>
+          <dd>{selectedRelease.date}</dd>
           <dt>Label</dt>
-          <dd>{selected.labelName}</dd>
+          <dd>{selectedRelease.labelName}</dd>
           <dt>Catalog No.</dt>
-          <dd>#{selected.labelCatalogNo}</dd>
+          <dd>#{selectedRelease.labelCatalogNo}</dd>
           <dt>Language</dt>
           <dd>
-            {selected.language}, {selected.languageScript}
+            {selectedRelease.language}, {selectedRelease.languageScript}
           </dd>
           <dt>Format</dt>
           <dd className="flex gap-0.5">
@@ -171,16 +166,16 @@ function InfoPanel(props: Props) {
             >
               <path d="M14 12c0 1.103-.897 2-2 2s-2-.897-2-2 .897-2 2-2 2 .897 2 2zm10 0c0 6.627-5.373 12-12 12s-12-5.373-12-12 5.373-12 12-12 12 5.373 12 12zm-15.44 4.912c-.572-.401-1.07-.899-1.471-1.471l-3.691 1.641c.859 1.45 2.071 2.662 3.521 3.521l1.641-3.691zm7.44-4.912c0-2.209-1.791-4-4-4s-4 1.791-4 4 1.791 4 4 4 4-1.791 4-4zm4.603-5.08c-.859-1.451-2.071-2.663-3.522-3.522l-1.641 3.691c.572.401 1.07.899 1.472 1.471l3.691-1.64z" />
             </svg>
-            {selected.mediaFormat}
+            {selectedRelease.mediaFormat}
           </dd>
           <dt>Track count</dt>
-          <dd>{selected.mediaTrackCount}</dd>
+          <dd>{selectedRelease.mediaTrackCount}</dd>
           <dt>Discs</dt>
-          <dd>{selected.mediaDiscCount}</dd>
+          <dd>{selectedRelease.mediaDiscCount}</dd>
           <dt>Packaging</dt>
-          <dd>{selected.packaging || ""}</dd>
+          <dd>{selectedRelease.packaging || ""}</dd>
           <dt>Release</dt>
-          <dd>{selected.releaseType}</dd>
+          <dd>{selectedRelease.releaseType}</dd>
         </dl>
       </aside>
     )

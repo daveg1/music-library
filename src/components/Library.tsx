@@ -1,14 +1,9 @@
 import { useContext } from "react";
 import { GlobalContext } from "../state";
 import { getAlbumCoverArtURL } from "../utils/musicbrainz";
-import { Release } from "../models/release.model";
 
-interface Props {
-  onItemSelect: (item: Release) => void;
-}
-
-function Library(props: Props) {
-  const { releases } = useContext(GlobalContext);
+function Library() {
+  const { releases, setSelectedRelease } = useContext(GlobalContext);
 
   return (
     <>
@@ -22,7 +17,7 @@ function Library(props: Props) {
             <article
               key={release.id}
               className="flex cursor-pointer flex-col gap-1 rounded-lg p-2 hover:bg-gray-50"
-              onClick={() => props.onItemSelect(release)}
+              onClick={() => setSelectedRelease(release)}
             >
               <img
                 className="aspect-square w-full rounded-lg bg-stone-200"
