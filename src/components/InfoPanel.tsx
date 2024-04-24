@@ -65,6 +65,7 @@ function InfoPanel() {
           <img
             src={getAlbumCoverArtURL(selectedRelease.id)}
             className="aspect-square w-full appearance-none rounded-lg bg-stone-200"
+            draggable="false"
           />
         </div>
 
