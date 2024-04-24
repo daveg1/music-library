@@ -1,11 +1,11 @@
 import clsx from "clsx";
 import "./FlagIcon.css";
 
-function FlagIcon(props: { country: string }) {
+function FlagIcon(props: { country?: string }) {
   return (
-    <div
-      className={clsx("flag", "flag-" + props.country.toLocaleLowerCase())}
-    ></div>
+    <span
+      className={clsx("flag", "flag-" + props.country?.toLocaleLowerCase())}
+    ></span>
   );
 }
 

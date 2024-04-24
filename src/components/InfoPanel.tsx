@@ -13,7 +13,7 @@ function InfoPanel(props: Props) {
 
   return (
     selected && (
-      <aside className="fixed right-4 top-4 mr-4 flex h-4/5 min-w-96 flex-col gap-2 rounded-lg bg-stone-100 p-4">
+      <aside className="fixed right-4 top-4 mr-4 flex h-4/5 w-96 flex-col gap-2 rounded-lg bg-stone-100 object-contain p-4">
         <header className="flex justify-between">
           <div>
             <h3 className="font-semibold">{selected.title}</h3>

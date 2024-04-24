@@ -17,6 +17,11 @@ function Search() {
     const artist = formData.get("artist")?.toString();
     const date = formData.get("date")?.toString();
 
+    // We want at least release or artist to be present
+    if (!release || !artist) {
+      return;
+    }
+
     const res = await searchRelease({ release, artist, date });
     setResults(res.releases.map(formatSearchRelease));
   }
@@ -77,7 +82,7 @@ function Search() {
         </div>
 
         <div className="flex w-96 justify-end">
-          <button className="flex h-10 items-center gap-1 rounded-full border border-amber-500 px-4 transition-colors hover:bg-amber-500 focus:bg-amber-500">
+          <button className="flex h-10 items-center gap-1 rounded-full border border-amber-500 px-4 transition-colors hover:bg-amber-500 active:bg-amber-600">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20"
