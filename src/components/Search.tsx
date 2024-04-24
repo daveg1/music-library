@@ -147,7 +147,7 @@ function Search() {
                 <p className="flex items-center gap-1 text-sm leading-6">
                   <span>{result.labelName ?? "—"}</span>
                   <span>&bull;</span>
-                  <span>#{result.labelCatalogeNo ?? "—"}</span>
+                  <span>#{result.labelCatalogNo ?? "—"}</span>
                   <span>&bull;</span>
                   <span className="inline-flex h-4 items-center gap-1">
                     <svg

@@ -16,7 +16,7 @@ function Library(props: Props) {
 
       {!releases.length && <div>No items saved yet</div>}
 
-      {releases.length && (
+      {releases.length > 0 && (
         <div className="grid grid-cols-4 gap-4">
           {releases.map((release) => (
             <article

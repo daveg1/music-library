@@ -17,12 +17,13 @@ export interface Release {
   country: string;
   barcode: string;
   asin: string;
-  labelCatalogeNo: string;
+  labelCatalogNo: string;
   labelName: string;
   trackCount: number;
   mediaFormat: string;
   mediaDiscCount: number;
   mediaTrackCount: number;
+  spotifyUrl?: string;
 }
 
 export interface SearchRelease {
@@ -74,7 +75,7 @@ export function formatSearchRelease(searchRelease: SearchRelease): Release {
     country: searchRelease.country,
     barcode: searchRelease.barcode,
     asin: searchRelease.asin,
-    labelCatalogeNo: searchRelease["label-info"]?.[0]?.["catalog-number"] ?? "",
+    labelCatalogNo: searchRelease["label-info"]?.[0]?.["catalog-number"] ?? "",
     labelName: searchRelease["label-info"]?.[0]?.label.name ?? "",
     trackCount: searchRelease["track-count"],
     mediaFormat: searchRelease.media?.[0]?.format ?? "",

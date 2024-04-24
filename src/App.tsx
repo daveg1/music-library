@@ -7,18 +7,34 @@ import { Search } from "./components/Search";
 import { readStorage, writeStorage } from "./utils/localstorage";
 import { Library } from "./components/Library";
 import { InfoPanel } from "./components/InfoPanel";
+import { getAuthToken } from "./utils/spotify_auth";
+import { AuthToken } from "./models/auth.model";
 
 function App() {
-  const [releases, setReleases] = useState<Release[]>(readStorage().releases);
+  const state = readStorage();
+
+  const [token, setToken] = useState<AuthToken | null>(null);
+  const [releases, setReleases] = useState<Release[]>(state.releases);
   const [tab, setTab] = useState<"library" | "search">("library");
   const [selected, setSelected] = useState<Release | null>(null);
 
   useEffect(() => {
-    writeStorage({ releases });
-  }, [releases]);
+    writeStorage({ releases, token });
+  }, [releases, token]);
+
+  useEffect(() => {
+    async function getToken() {
+      const token = await getAuthToken();
+      setToken(token);
+    }
+
+    if (!token) {
+      getToken();
+    }
+  }, []);
 
   return (
-    <GlobalContext.Provider value={{ releases, setReleases }}>
+    <GlobalContext.Provider value={{ releases, setReleases, token, setToken }}>
       <header className="mx-auto max-w-screen-md px-4 py-4">
         <h1 className="text-xl font-semibold">Music Library</h1>
       </header>

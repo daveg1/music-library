@@ -4,6 +4,7 @@ const LOCAL_STORAGE_KEY = "music-library-853479yzxjih";
 
 const DEFAULT_STATE = {
   releases: [],
+  token: null,
 } satisfies State;
 
 export function writeStorage(newState: State) {
