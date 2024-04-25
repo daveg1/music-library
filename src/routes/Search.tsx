@@ -1,7 +1,7 @@
 import { FormEvent, useContext, useState } from "react";
 import { getAlbumCoverArtURL, searchRelease } from "../utils/musicbrainz";
 import { Release, formatSearchRelease } from "../models/release.model";
-import { FlagIcon } from "./FlagIcon";
+import { FlagIcon } from "../components/FlagIcon";
 import { GlobalContext } from "../state";
 import clsx from "clsx";
 

@@ -2,7 +2,7 @@ import clsx from "clsx";
 import { useContext } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { GlobalContext } from "../state";
-import { InfoPanel } from "./InfoPanel";
+import { InfoPanel } from "../components/InfoPanel";
 
 function Layout() {
   const { setSelectedRelease } = useContext(GlobalContext);

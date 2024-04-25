@@ -2,13 +2,13 @@ import "./App.css";
 import { useEffect, useState } from "react";
 import { GlobalContext } from "./state";
 import { Release } from "./models/release.model";
-import { Search } from "./components/Search";
+import { Search } from "./routes/Search";
 import { readStorage, writeStorage } from "./utils/localstorage";
-import { Library } from "./components/Library";
+import { Library } from "./routes/Library";
 import { getAuthToken } from "./utils/spotify_auth";
 import { AuthToken } from "./models/auth.model";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { Layout } from "./components/Layout";
+import { Layout } from "./routes/Layout";
 
 function App() {
   const state = readStorage();
