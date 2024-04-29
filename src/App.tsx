@@ -5,10 +5,15 @@ import { Release } from "./models/release.model";
 import { Search } from "./routes/Search";
 import { readStorage, writeStorage } from "./utils/localstorage";
 import { Library } from "./routes/Library";
-import { getAuthToken } from "./utils/spotify_auth";
+import { getAuthToken, getSpotifyAlbumTracks } from "./utils/spotify_auth";
 import { AuthToken } from "./models/auth.model";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import {
+  RouterProvider,
+  createBrowserRouter,
+  redirect,
+} from "react-router-dom";
 import { Layout } from "./routes/Layout";
+import { Tracklist, tracklistLoader } from "./routes/Tracklist";
 
 function App() {
   const state = readStorage();
@@ -18,32 +23,42 @@ function App() {
   const [selectedRelease, setSelectedRelease] = useState<Release | null>(null);
 
   useEffect(() => {
-    writeStorage({ releases, token });
-  }, [releases, token]);
+    writeStorage({ releases, token: null });
+  }, [releases]);
 
-  useEffect(() => {
-    async function getToken() {
-      const token = await getAuthToken();
-      setToken(token);
-    }
+  // useEffect(() => {
+  //   async function getToken() {
 
-    if (!token) {
-      getToken();
-    }
-  }, []);
+  //   }
+
+  //   if (!token) {
+  //     getToken();
+  //   }
+  // }, []);
 
   const router = createBrowserRouter([
     {
       path: "/",
-      Component: Layout,
+      element: <Layout />,
+      loader: async () => {
+        if (!token) {
+          setToken(await getAuthToken());
+        }
+        return null;
+      },
       children: [
         {
           path: "/library",
-          Component: Library,
+          element: <Library />,
         },
         {
           path: "/search",
-          Component: Search,
+          element: <Search />,
+        },
+        {
+          path: "/tracklist/:albumId",
+          element: <Tracklist />,
+          loader: tracklistLoader,
         },
       ],
     },

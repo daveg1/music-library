@@ -7,6 +7,24 @@ import { InfoPanel } from "../components/InfoPanel";
 function Layout() {
   const { setSelectedRelease } = useContext(GlobalContext);
 
+  const routeLinks: {
+    path: string;
+    text: string;
+    onClick?: () => void;
+  }[] = [
+    { path: "/library", text: "Library" },
+    {
+      path: "/search",
+      text: "Search",
+      onClick: () => setSelectedRelease(null),
+    },
+    {
+      path: "/tracklist",
+      text: "Track List",
+      onClick: () => setSelectedRelease(null),
+    },
+  ];
+
   return (
     <>
       <header className="mx-auto max-w-screen-md px-4 py-4">
@@ -14,24 +32,19 @@ function Layout() {
       </header>
 
       <menu className="mx-auto flex max-w-screen-md gap-4 px-4">
-        <NavLink
-          to={"/library"}
-          className={({ isActive }) =>
-            clsx("border-b-2", isActive && "border-b-amber-400")
-          }
-        >
-          Library
-        </NavLink>
-
-        <NavLink
-          to={"/search"}
-          className={({ isActive }) =>
-            clsx("border-b-2", isActive && "border-b-amber-400")
-          }
-          onClick={() => setSelectedRelease(null)}
-        >
-          Search
-        </NavLink>
+        {routeLinks.map((link) => (
+          <NavLink
+            key={link.path}
+            to={link.path}
+            className={({ isActive }) =>
+              clsx("border-b-2", isActive && "border-b-amber-400")
+            }
+            onClick={link.onClick}
+            unstable_viewTransition
+          >
+            {link.text}
+          </NavLink>
+        ))}
       </menu>
 
       <main className="mx-auto max-w-screen-md px-4">

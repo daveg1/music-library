@@ -1,8 +1,9 @@
 import { useContext } from "react";
 import { getAlbumCoverArtURL } from "../utils/musicbrainz";
 import { FlagIcon } from "./FlagIcon";
-import { getSpotifyAlbum } from "../utils/spotify_auth";
+import { searchSpotifyAlbum } from "../utils/spotify_auth";
 import { GlobalContext } from "../state";
+import { NavLink } from "react-router-dom";
 
 function InfoPanel() {
   const { selectedRelease, setSelectedRelease, token, releases, setReleases } =
@@ -10,13 +11,14 @@ function InfoPanel() {
 
   async function linkSpotify() {
     if (!selectedRelease || !token) return;
-    const results = await getSpotifyAlbum(token, selectedRelease.title);
+    const results = await searchSpotifyAlbum(token, selectedRelease.title);
     console.log(results);
 
-    const spotifyUrl = results.albums.items[0].external_urls.spotify;
+    const album = results.albums.items[0];
     const updatedReleases = releases.map((r) => {
       if (r.id == selectedRelease.id) {
-        r.spotifyUrl = spotifyUrl;
+        r.spotifyId = album.id;
+        r.spotifyUrl = album.external_urls.spotify;
       }
 
       return r;
@@ -29,8 +31,8 @@ function InfoPanel() {
     window.open(selectedRelease?.spotifyUrl, "_blank");
   }
 
-  function openTrackList() {
-    // TODO: open something...
+  function closeInfoPanel() {
+    setSelectedRelease(null);
   }
 
   return (
@@ -97,7 +99,7 @@ function InfoPanel() {
             </button>
           )}
 
-          {selectedRelease.spotifyUrl && (
+          {selectedRelease.spotifyId && (
             <>
               <button
                 className="flex h-8 items-center gap-1 rounded border border-stone-300 px-2 transition-colors hover:border-black hover:bg-black hover:text-white"
@@ -117,9 +119,11 @@ function InfoPanel() {
                 <span className="text-sm">Open in Spotify</span>
               </button>
 
-              <button
+              <NavLink
                 className="flex h-8 items-center gap-1 rounded border border-stone-300 px-2 transition-colors hover:border-black hover:bg-black hover:text-white"
-                onClick={openTrackList}
+                to={`/tracklist/${selectedRelease.spotifyId}`}
+                onClick={closeInfoPanel}
+                unstable_viewTransition
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -131,7 +135,7 @@ function InfoPanel() {
                 </svg>
 
                 <span className="text-sm">View tracklist</span>
-              </button>
+              </NavLink>
             </>
           )}
         </menu>

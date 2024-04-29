@@ -23,6 +23,7 @@ export interface Release {
   mediaFormat: string;
   mediaDiscCount: number;
   mediaTrackCount: number;
+  spotifyId?: string;
   spotifyUrl?: string;
 }
 
