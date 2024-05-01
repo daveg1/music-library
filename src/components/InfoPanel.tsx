@@ -1,16 +1,23 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { getAlbumCoverArtURL } from "../utils/musicbrainz";
 import { FlagIcon } from "./FlagIcon";
 import { searchSpotifyAlbum } from "../utils/spotify_auth";
 import { GlobalContext } from "../state";
 import { NavLink } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
+import { Loader } from "./Loader";
 
 function InfoPanel() {
-  const { selectedRelease, setSelectedRelease, token, releases, setReleases } =
+  const { selectedRelease, setSelectedRelease, releases, setReleases } =
     useContext(GlobalContext);
+
+  const { token } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
 
   async function linkSpotify() {
     if (!selectedRelease || !token) return;
+    setIsLoading(true);
+
     const results = await searchSpotifyAlbum(token, selectedRelease.title);
     console.log(results);
 
@@ -25,6 +32,7 @@ function InfoPanel() {
     });
 
     setReleases(updatedReleases);
+    setIsLoading(false);
   }
 
   function openSpotify() {
@@ -37,7 +45,7 @@ function InfoPanel() {
 
   return (
     selectedRelease && (
-      <aside className="fixed right-4 top-4 mr-4 flex h-4/5 w-96 flex-col gap-2 rounded-lg bg-stone-100 object-contain p-4">
+      <aside className="fixed right-4 top-4 mr-4 flex max-h-[calc(100vh_-_2rem)] w-96 flex-col gap-2 overflow-y-auto rounded-lg bg-stone-100 object-contain p-4">
         <header className="flex justify-between">
           <div>
             <h3 className="font-semibold leading-4">{selectedRelease.title}</h3>
@@ -74,7 +82,8 @@ function InfoPanel() {
         <menu className="flex gap-2 py-1">
           {!selectedRelease.spotifyUrl && (
             <button
-              className="flex h-8 items-center gap-1 rounded border border-stone-300 px-2 transition-colors hover:border-black hover:bg-black hover:text-white"
+              className="flex h-8 min-w-24 items-center gap-1 rounded border border-stone-300 px-2 transition-colors hover:border-black hover:bg-black hover:text-white disabled:opacity-50 disabled:hover:border-stone-300 disabled:hover:bg-transparent disabled:hover:text-current"
+              disabled={!token || isLoading}
               onClick={linkSpotify}
             >
               <svg
@@ -95,7 +104,13 @@ function InfoPanel() {
                 />
               </svg>
 
-              <span className="text-sm">Link Spotify</span>
+              {!isLoading && <span className="text-sm">Link Spotify</span>}
+
+              {isLoading && (
+                <span className="mx-4 flex">
+                  <Loader size="mini" />
+                </span>
+              )}
             </button>
           )}
 

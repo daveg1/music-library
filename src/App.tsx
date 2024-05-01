@@ -5,15 +5,15 @@ import { Release } from "./models/release.model";
 import { Search } from "./routes/Search";
 import { readStorage, writeStorage } from "./utils/localstorage";
 import { Library } from "./routes/Library";
-import { getAuthToken, getSpotifyAlbumTracks } from "./utils/spotify_auth";
 import { AuthToken } from "./models/auth.model";
 import {
+  Navigate,
   RouterProvider,
   createBrowserRouter,
-  redirect,
 } from "react-router-dom";
 import { Layout } from "./routes/Layout";
 import { Tracklist, tracklistLoader } from "./routes/Tracklist";
+import { AuthProvider } from "./contexts/AuthContext";
 
 function App() {
   const state = readStorage();
@@ -26,30 +26,15 @@ function App() {
     writeStorage({ releases, token: null });
   }, [releases]);
 
-  // useEffect(() => {
-  //   async function getToken() {
-
-  //   }
-
-  //   if (!token) {
-  //     getToken();
-  //   }
-  // }, []);
-
   const router = createBrowserRouter([
     {
       path: "/",
       element: <Layout />,
-      loader: async () => {
-        if (!token) {
-          setToken(await getAuthToken());
-        }
-        return null;
-      },
       children: [
         {
-          path: "/library",
+          path: "",
           element: <Library />,
+          index: true,
         },
         {
           path: "/search",
@@ -59,6 +44,10 @@ function App() {
           path: "/tracklist/:albumId",
           element: <Tracklist />,
           loader: tracklistLoader,
+        },
+        {
+          path: "*",
+          element: <Navigate to="/" />,
         },
       ],
     },
@@ -75,7 +64,9 @@ function App() {
         setToken,
       }}
     >
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
     </GlobalContext.Provider>
   );
 }

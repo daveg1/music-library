@@ -3,16 +3,22 @@ import { useContext } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { GlobalContext } from "../state";
 import { InfoPanel } from "../components/InfoPanel";
+import { useAuth } from "../contexts/AuthContext";
 
 function Layout() {
   const { setSelectedRelease } = useContext(GlobalContext);
+  const { token, signIn } = useAuth();
+
+  if (!token) {
+    signIn();
+  }
 
   const routeLinks: {
     path: string;
     text: string;
     onClick?: () => void;
   }[] = [
-    { path: "/library", text: "Library" },
+    { path: "/", text: "Library" },
     {
       path: "/search",
       text: "Search",
