@@ -9,10 +9,10 @@ export interface Release {
   title: string;
   status: string;
   packaging: string;
-  language: string; // text-rep
-  languageScript: string; // text-rep
+  language: string;
+  languageScript: string;
   artist: string;
-  releaseType: string; // release-group.primary-type
+  releaseType: string;
   date: string;
   country: string;
   barcode: string;
@@ -68,10 +68,10 @@ export function formatSearchRelease(searchRelease: SearchRelease): Release {
     title: searchRelease.title,
     status: searchRelease.status,
     packaging: searchRelease.packaging,
-    language: searchRelease["text-representation"].language, // text-rep
-    languageScript: searchRelease["text-representation"].script, // text-rep
+    language: searchRelease["text-representation"]?.language ?? "",
+    languageScript: searchRelease["text-representation"]?.script ?? "",
     artist: searchRelease["artist-credit"]?.[0]?.name ?? "",
-    releaseType: searchRelease["release-group"]["primary-type"], // release-group.primary-type
+    releaseType: searchRelease["release-group"]["primary-type"] ?? "",
     date: searchRelease.date,
     country: searchRelease.country,
     barcode: searchRelease.barcode,

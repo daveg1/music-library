@@ -18,7 +18,7 @@ function InfoPanel() {
     if (!selectedRelease || !token) return;
     setIsLoading(true);
 
-    const results = await searchSpotifyAlbum(token, selectedRelease.title);
+    const results = await searchSpotifyAlbum(selectedRelease.title);
     console.log(results);
 
     const album = results.albums.items[0];

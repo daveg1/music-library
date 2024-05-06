@@ -4,14 +4,17 @@ import { Release, formatSearchRelease } from "../models/release.model";
 import { FlagIcon } from "../components/FlagIcon";
 import { GlobalContext } from "../state";
 import clsx from "clsx";
+import { Loader } from "../components/Loader";
 
 function Search() {
   const [results, setResults] = useState<Release[] | null>(null);
   const { releases, setReleases } = useContext(GlobalContext);
+  const [isLoading, setIsLoading] = useState(false);
 
   async function handleFormSubmit(e: FormEvent) {
     e.preventDefault();
 
+    setIsLoading(true);
     const formData = new FormData(e.target as HTMLFormElement);
     const release = formData.get("release")?.toString();
     const artist = formData.get("artist")?.toString();
@@ -19,11 +22,13 @@ function Search() {
 
     // We want at least release or artist to be present
     if (!release || !artist) {
+      setIsLoading(false);
       return;
     }
 
     const res = await searchRelease({ release, artist, date });
     setResults(res.releases.map(formatSearchRelease));
+    setIsLoading(false);
   }
 
   function addRelease(release: Release) {
@@ -44,7 +49,7 @@ function Search() {
       >
         <div className="flex flex-col gap-1">
           <label className="cursor-pointer text-sm" htmlFor="release">
-            Title
+            Title*
           </label>
 
           <input
@@ -52,12 +57,13 @@ function Search() {
             id="release"
             type="text"
             name="release"
+            required
           />
         </div>
 
         <div className="flex flex-col gap-1">
           <label className="cursor-pointer text-sm" htmlFor="artist">
-            Artist
+            Artist*
           </label>
 
           <input
@@ -65,6 +71,7 @@ function Search() {
             id="artist"
             type="text"
             name="artist"
+            required
           />
         </div>
 
@@ -82,21 +89,31 @@ function Search() {
         </div>
 
         <div className="flex w-96 justify-end">
-          <button className="flex h-10 items-center gap-1 rounded-full border border-amber-500 px-4 transition-colors hover:bg-amber-500 active:bg-amber-600">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              className="-ms-1 h-5 w-5"
-            >
-              <path
-                fillRule="evenodd"
-                d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM2 9a7 7 0 1 1 12.452 4.391l3.328 3.329a.75.75 0 1 1-1.06 1.06l-3.329-3.328A7 7 0 0 1 2 9Z"
-                clipRule="evenodd"
-              />
-            </svg>
+          <button className="flex h-10 min-w-28 items-center gap-2 rounded-full border border-amber-500 px-4 transition-colors hover:bg-amber-500 active:bg-amber-600">
+            {!isLoading && (
+              <>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  className="-ms-1 h-5 w-5"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM2 9a7 7 0 1 1 12.452 4.391l3.328 3.329a.75.75 0 1 1-1.06 1.06l-3.329-3.328A7 7 0 0 1 2 9Z"
+                    clipRule="evenodd"
+                  />
+                </svg>
 
-            <span>Search</span>
+                <span>Search</span>
+              </>
+            )}
+
+            {isLoading && (
+              <span className="flex w-full justify-center">
+                <Loader size="mini" />
+              </span>
+            )}
           </button>
         </div>
       </form>
