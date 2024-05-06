@@ -5,7 +5,6 @@ import { Release } from "./models/release.model";
 import { Search } from "./routes/Search";
 import { readStorage, writeStorage } from "./utils/localstorage";
 import { Library } from "./routes/Library";
-import { AuthToken } from "./models/auth.model";
 import {
   Navigate,
   RouterProvider,
@@ -18,7 +17,6 @@ import { AuthProvider } from "./contexts/AuthContext";
 function App() {
   const state = readStorage();
 
-  const [token, setToken] = useState<AuthToken | null>(null);
   const [releases, setReleases] = useState<Release[]>(state.releases);
   const [selectedRelease, setSelectedRelease] = useState<Release | null>(null);
 
@@ -60,8 +58,6 @@ function App() {
         setReleases,
         selectedRelease,
         setSelectedRelease,
-        token,
-        setToken,
       }}
     >
       <AuthProvider>

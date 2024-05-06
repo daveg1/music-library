@@ -1,21 +1,11 @@
 import { LoaderFunctionArgs, useLoaderData } from "react-router-dom";
 import { SpotifyAlbumFull } from "../models/spotify.model";
-import { getAuthToken, getSpotifyAlbum } from "../utils/spotify_auth";
-import { useContext } from "react";
-import { GlobalContext } from "../state";
+import { getSpotifyAlbum } from "../utils/spotify_auth";
 
 export async function tracklistLoader({
   params,
 }: LoaderFunctionArgs): Promise<SpotifyAlbumFull> {
-  let { token, setToken } = useContext(GlobalContext);
-
-  if (!token) {
-    const newToken = await getAuthToken();
-    setToken(newToken);
-    token = newToken;
-  }
-
-  return await getSpotifyAlbum(token!, params.albumId!);
+  return await getSpotifyAlbum(params.albumId!);
 }
 
 function Tracklist() {
