@@ -15,6 +15,7 @@ function Tracklist() {
   const [error, setError] = useState<SpotifyError | Error | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // TODO: replace with ReactQuery
   useEffect(() => {
     let ignore = false;
     setIsLoading(true);

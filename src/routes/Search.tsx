@@ -26,6 +26,7 @@ function Search() {
       return;
     }
 
+    // TODO: replace with ReactQuery
     const res = await searchRelease({ release, artist, date });
     setResults(res.releases.map(formatSearchRelease));
     setIsLoading(false);
