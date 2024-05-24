@@ -1,5 +1,9 @@
 import { AuthToken } from "../models/auth.model";
-import { SpotifyAlbumFull, SpotifyAlbumSearch } from "../models/spotify.model";
+import {
+  SpotifyAlbumFull,
+  SpotifyAlbumSearch,
+  SpotifyError,
+} from "../models/spotify.model";
 import { readStorage } from "./localstorage";
 
 const SEARCH_URL = "https://api.spotify.com/v1/search?";
@@ -56,5 +60,5 @@ export async function getSpotifyAlbum(albumId: string) {
     },
   })
     .then((res) => res.json())
-    .then((res) => res as SpotifyAlbumFull);
+    .then((res) => res as SpotifyAlbumFull | SpotifyError);
 }

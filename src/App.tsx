@@ -11,7 +11,7 @@ import {
   createBrowserRouter,
 } from "react-router-dom";
 import { Layout } from "./routes/Layout";
-import { Tracklist, tracklistLoader } from "./routes/Tracklist";
+import { Tracklist } from "./routes/Tracklist";
 import { AuthProvider } from "./contexts/AuthContext";
 
 function App() {
@@ -41,7 +41,7 @@ function App() {
         {
           path: "/tracklist/:albumId",
           element: <Tracklist />,
-          loader: tracklistLoader,
+          // loader: tracklistLoader,
         },
         {
           path: "*",

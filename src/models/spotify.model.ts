@@ -42,6 +42,13 @@ interface SpotifyClassType {
   uri: string;
 }
 
+export interface SpotifyError {
+  status: number;
+  message: number;
+}
+
+export const isSpotifyError = (d: object): d is SpotifyError => "error" in d;
+
 export interface SpotifyAlbumSearch {
   albums: SpotifyPaginatedType<SpotifyAlbum>;
 }
